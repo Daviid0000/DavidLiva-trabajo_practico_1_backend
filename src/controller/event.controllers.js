@@ -1,9 +1,10 @@
 import  {evento}  from '../models/event.js';
+import { usuario } from '../models/usuario.js';
 const eventoCtrl = {}
 
 eventoCtrl.createEvent = async (req, res) => {
 
-    const { eventName, eventLocation, eventDateStart, eventDateEnd, id_user } = req.body;
+    const { eventName, eventLocation, eventDateStart, eventDateEnd, id_user, estadoUser } = req.body;
 
     try {
         const existeEvento = await evento.findOne({
@@ -15,16 +16,35 @@ eventoCtrl.createEvent = async (req, res) => {
         if (existeEvento) {
             throw ({
                 status: 400,
-                message: 'El evento ya existe',
+                message: 'Ya existe un evento en esa ubicación',
             })
         };
+
+        const usuarioExistente = await usuario.findOne({
+            where: {
+                estadoUser: true,
+                id_user
+            }
+            
+        })
+        console.log(usuarioExistente)
+
+        if (!usuarioExistente) {
+
+            throw ({
+                status: 404,
+                message: 'Antes de crear un evento, debes crear un usuario',
+            })
+        };
+        
 
         const nuevoEvento = new evento({
             eventName,
             eventLocation,
             eventDateStart,
             eventDateEnd,
-            id_user
+            id_user,
+            estadoUser
         });
 
 

@@ -35,6 +35,7 @@ const evento = sequelize.define('evento', {
         type: DataTypes.BOOLEAN,
     defaultValue: true
     },
+
     id_user: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -42,20 +43,26 @@ const evento = sequelize.define('evento', {
             model: usuario,
             key: "id_user",
         }
-    }
+    },
 
+    estadoUser: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
     
 }, {
     
     timestamps: false,
 });
 
-usuario.hasMany(evento, {
-    foreignKey: 'id_user'
-})
 evento.belongsTo(usuario, {
     foreignKey: 'id_user'
 });
+
+usuario.hasMany(evento, {
+    foreignKey: 'id_user'
+})
 
 
 export {evento}
